@@ -5,253 +5,83 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Feeling Family</title>
-  
+
   <style>
-    :root { --bg:#0f172a; --text:#e5e7eb; --muted:#94a3b8; --accent:#6366f1; --accent2:#22d3ee; }
-    html,body{height:100%;}
+    :root {
+      --bg:#0f172a;
+      --text:#e5e7eb;
+      --muted:#94a3b8;
+      --accent:#6366f1;
+      --accent2:#22d3ee;
+      --border:#1f2937;
+      --card:#0b1220;
+      --thead:#0f172a;
+    }
+
+    html, body { height: 100%; }
     body{
       margin:0;
-      font-family:system-ui,-apple-system,Segoe UI,Roboto,"Helvetica Neue",Arial,sans-serif;
-      background:radial-gradient(1000px 400px at 10% 0%, #111827 30%, #0b1020 70%), var(--bg);
-      color:var(--text);
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, sans-serif;
+      background: radial-gradient(1000px 400px at 10% 0%, #111827 30%, #0b1020 70%), var(--bg);
+      color: var(--text);
     }
-    .container{max-width:1000px;margin:40px auto;padding:0 16px;}
+
+    .container{ max-width:1000px; margin:40px auto; padding:0 16px; }
+
     header h1{
       margin:0 0 8px;
       font-weight:800;
       font-size:clamp(24px,4vw,36px);
       letter-spacing:-.02em;
-      background:linear-gradient(90deg,var(--accent),var(--accent2));
-      -webkit-background-clip:text;background-clip:text;color:transparent;
+      background:linear-gradient(90deg, var(--accent), var(--accent2));
+      -webkit-background-clip:text; background-clip:text; color:transparent;
     }
-    header p{margin:0 0 18px;color:var(--muted);}
-    .controls{display:grid;grid-template-columns:1fr auto auto;gap:8px;margin-bottom:16px;align-items:center;}
-    .controls input,.controls select,.controls button{
-      background:#0b1220;color:var(--text);border:1px solid #1f2937;border-radius:8px;padding:10px 12px;outline:none;
+    header p{ margin:0 0 18px; color:var(--muted); }
+
+    .controls{
+      display:grid; grid-template-columns:1fr auto auto; gap:8px; margin-bottom:16px; align-items:center;
     }
-    .controls button{cursor:pointer;background:linear-gradient(90deg,#4f46e5,#06b6d4);border:none;font-weight:600;}
-    .card{background:#0b1220;border:1px solid #1f2937;border-radius:14px;overflow:hidden;box-shadow:0 10px 30px rgba(0,0,0,.35);}
-    table{width:100%;border-collapse:collapse;}
-    thead th{text-align:left;font-weight:700;padding:12px 14px;background:#0f172a;border-bottom:1px solid #1f2937;position:sticky;top:0;z-index:1;}
-    tbody td{padding:12px 14px;border-bottom:1px solid #1f2937;}
-    tbody tr:nth-child(odd){background:rgba(255,255,255,.02);}
-    .rank-badge{display:inline-block;min-width:36px;text-align:center;padding:6px 10px;border-radius:999px;font-weight:700;color:#0b1220;background:#f59e0b;}
-    .mono{font-variant-numeric:tabular-nums;font-feature-settings:"tnum";}
-    .footer{color:var(--muted);font-size:12px;padding:12px;text-align:right;}
-    .empty{padding:24px;text-align:center;color:var(--muted);}
+    .controls input, .controls select, .controls button{
+      background:var(--card); color:var(--text);
+      border:1px solid var(--border); border-radius:8px; padding:10px 12px; outline:none;
+    }
+    .controls button{
+      cursor:pointer; background:linear-gradient(90deg, #4f46e5, #06b6d4);
+      border:none; font-weight:600;
+    }
+
+    .card{
+      background:var(--card);
+      border:1px solid var(--border);
+      border-radius:14px; overflow:hidden;
+      box-shadow:0 10px 30px rgba(0,0,0,.35);
+    }
+
+    table{ width:100%; border-collapse:collapse; }
+    thead th{
+      text-align:left; font-weight:700; padding:12px 14px;
+      background:var(--thead); border-bottom:1px solid var(--border);
+      position:sticky; top:0; z-index:1;
+    }
+    tbody td{ padding:12px 14px; border-bottom:1px solid var(--border); }
+    tbody tr:nth-child(odd){ background:rgba(255,255,255,.02); }
+
+    .rank-badge{
+      display:inline-block; min-width:36px; text-align:center;
+      padding:6px 10px; border-radius:999px; font-weight:700;
+      color:#0b1220; background:#f59e0b;
+    }
+    .mono{ font-variant-numeric:tabular-nums; font-feature-settings:"tnum"; }
+    .footer{ color:var(--muted); font-size:12px; padding:12px; text-align:right; }
+    .empty{ padding:24px; text-align:center; color:var(--muted); }
   </style>
 </head>
 <body>
   <div class="container">
     <header>
       <h1>Feeling Leaderboard</h1>
-      
+      <p>Data diambil dari Google Sheets (kolom: <strong>No Member</strong>, <strong>Nama</strong>, <strong>Point</strong>).</p>
     </header>
 
-    <div class="controls">
+    <div class="controls" role="region" aria-label="Filter dan aksi">
       <input id="searchBox" type="search" placeholder="Cari nama atau No Member…" aria-label="Cari" />
-      <select id="limitSelect" aria-label="Tampilkan">
-        <option value="10" selected>Top 10</option>
-        <option value="25">Top 25</option>
-        <option value="50">Top 50</option>
-        <option value="0">Semua</option>
-      </select>
-      <button id="refreshBtn">Muat Ulang</button>
-    </div>
-
-    <div class="card">
-      <table id="board">
-        <thead>
-          <tr>
-            <th style="width:90px">Peringkat</th>
-            <th style="width:140px">No Member</th>
-            <th>Nama</th>
-            <th style="width:140px">Point</th>
-          </tr>
-        </thead>
-        <tbody id="boardBody">
-          <tr><td colspan="4" class="empty">Memuat data…</td></tr>
-        </tbody>
-      </table>
-      <div class="footer" id="meta"></div>
-    </div>
-  </div>
-
-  <script>
-    // ===== KONFIGURASI: Sheet kamu =====
-    const SHEET_ID = "1UBrdYls_Ed0GIXCSPghK9C3du5dEhbdx";
-    const GID      = "371192175";
-    const HEADERS_EXPECT = ["No Member","Nama","Point"];
-
-    // Endpoints
-    const GVIZ_URL = (id,gid)=>`https://docs.google.com/spreadsheets/d/${id}/gviz/tq?tqx=out:json&gid=${gid}`;
-    const CSV_URL  = (id,gid)=>`https://docs.google.com/spreadsheets/d/${id}/export?format=csv&gid=${gid}`;
-
-    // State
-    const state = { rows: [], filtered: [], limit: 10, query: "", rankMap: {} };
-
-    const el = {
-      body: document.getElementById("boardBody"),
-      meta: document.getElementById("meta"),
-      search: document.getElementById("searchBox"),
-      limit: document.getElementById("limitSelect"),
-      refresh: document.getElementById("refreshBtn"),
-    };
-
-    // ===== Fetch main =====
-    async function fetchSheet(){
-      el.body.innerHTML = `<tr><td colspan="4" class="empty">Memuat data…</td></tr>`;
-
-      // Coba GVIZ
-      if (await tryFetchGviz()) return;
-      // Fallback CSV
-      if (await tryFetchCsv()) return;
-
-      el.body.innerHTML = `<tr><td colspan="4" class="empty">
-        Gagal memuat data. Pastikan Sheet dibagikan publik dan sudah <b>Publish to the web</b>.
-      </td></tr>`;
-      el.meta.textContent = `Fetch gagal • ${new Date().toLocaleString("id-ID")}`;
-    }
-
-    async function tryFetchGviz(){
-      try{
-        const res = await fetch(GVIZ_URL(SHEET_ID, GID), { cache: "no-store" });
-        const text = await res.text();
-        const jsonStr = text.replace(/^[^(]+\(/,"").replace(/\)\s*;?\s*$/,"");
-        const payload = JSON.parse(jsonStr);
-        if (!payload.table) throw new Error("payload.table kosong");
-
-        const headers = payload.table.cols.map(c => (c.label || "").trim());
-        const rows = payload.table.rows.map(r => {
-          const c = r.c || []; const o = {};
-          headers.forEach((label,i)=>{ o[label] = c[i]?.v ?? ""; });
-          return o;
-        });
-
-        applyAndRender(rows, headers, "Google Visualization (JSON)");
-        return true;
-      }catch(e){ console.warn("GVIZ gagal:", e); return false; }
-    }
-
-    async function tryFetchCsv(){
-      try{
-        const res = await fetch(CSV_URL(SHEET_ID, GID), { cache: "no-store" });
-        const csv = await res.text();
-        const { headers, rows } = parseCsv(csv);
-        applyAndRender(rows, headers, "CSV export");
-        return true;
-      }catch(e){ console.warn("CSV gagal:", e); return false; }
-    }
-
-    function parseCsv(text){
-      const lines = text.trim().split(/\r?\n/);
-      const headers = splitCsvLine(lines[0]).map(h=>h.trim());
-      const rows = lines.slice(1).map(line=>{
-        const cols = splitCsvLine(line);
-        const o={}; headers.forEach((h,i)=>{ o[h]=(cols[i]??"").trim(); });
-        return o;
-      });
-      return { headers, rows };
-    }
-    function splitCsvLine(line){
-      const out=[]; let cur="",q=false;
-      for(let i=0;i<line.length;i++){
-        const ch=line[i];
-        if(ch=='"'){ if(q && line[i+1]=='"'){cur+='"'; i++;} else { q=!q; } }
-        else if(ch==',' && !q){ out.push(cur); cur=""; }
-        else { cur+=ch; }
-      }
-      out.push(cur); return out;
-    }
-
-    function normalizeHeaderMap(headers, expected){
-      const lower=headers.map(h=>h.toLowerCase()); const map={};
-      expected.forEach(exp=>{ const idx=lower.indexOf(exp.toLowerCase()); if(idx>=0) map[exp]=headers[idx]; });
-      return map;
-    }
-
-    // ===== Apply & Render with GLOBAL RANK =====
-    function applyAndRender(rows, headers, source){
-      const map = normalizeHeaderMap(headers, HEADERS_EXPECT);
-
-      // Normalisasi data ke kolom yang kita pakai
-      const data = rows.map(r=>({
-        "No Member": r[map["No Member"]] ?? r["No Member"] ?? "",
-        "Nama":      r[map["Nama"]]      ?? r["Nama"]      ?? "",
-        "Point":     r[map["Point"]]     ?? r["Point"]     ?? 0
-      }));
-
-      // Sortir desc berdasarkan Point
-      data.sort((a,b)=>Number(b["Point"])-Number(a["Point"]));
-
-      // Peta rank global (No Member -> rank 1-based)
-      const rankMap = {};
-      data.forEach((row, i) => {
-        const key = String(row["No Member"] ?? "").trim();
-        if (key) rankMap[key] = i + 1;
-      });
-
-      state.rows = data;
-      state.rankMap = rankMap;
-
-      applyFilter();
-      render();
-      el.meta.textContent = `Sumber: ${source} • ${state.filtered.length} baris • ${new Date().toLocaleString("id-ID")}`;
-    }
-
-    function applyFilter(){
-      const q = state.query.trim().toLowerCase();
-      state.filtered = !q
-        ? [...state.rows]
-        : state.rows.filter(r =>
-            String(r["No Member"]).toLowerCase().includes(q) ||
-            String(r["Nama"]).toLowerCase().includes(q)
-          );
-    }
-
-    function rankBadge(rank){
-      const styles=[
-        "background:linear-gradient(90deg,#f59e0b,#f97316);color:#0b1220;", // 1
-        "background:linear-gradient(90deg,#9ca3af,#d1d5db);color:#0b1220;", // 2
-        "background:linear-gradient(90deg,#c084fc,#a855f7);color:#0b1220;"  // 3
-      ];
-      const style=styles[rank-1]||"background:#374151;color:#e5e7eb;";
-      return `<span class="rank-badge" style="${style}">${rank}</span>`;
-    }
-
-    function render(){
-      const limit = state.limit===0 ? state.filtered.length : state.limit;
-      const slice = state.filtered.slice(0, limit);
-
-      if (slice.length===0){
-        el.body.innerHTML = `<tr><td colspan="4" class="empty">Tidak ada data.</td></tr>`;
-        return;
-      }
-
-      const rowsHtml = slice.map((r) => {
-        const key = String(r["No Member"] ?? "").trim();
-        const rank = state.rankMap[key] ?? "-"; // gunakan peringkat global
-        const point = Number(r["Point"] ?? 0).toLocaleString("id-ID");
-        return `
-          <tr>
-            <td>${rankBadge(rank)}</td>
-            <td class="mono">${r["No Member"] ?? ""}</td>
-            <td>${r["Nama"] ?? ""}</td>
-            <td class="mono"><b>${point}</b></td>
-          </tr>
-        `;
-      }).join("");
-
-      el.body.innerHTML = rowsHtml;
-    }
-
-    // Events
-    el.search.addEventListener("input",(e)=>{ state.query=e.target.value; applyFilter(); render(); });
-    el.limit.addEventListener("change",(e)=>{ state.limit=Number(e.target.value); render(); });
-    el.refresh.addEventListener("click",()=>{ fetchSheet(); });
-
-    // Init
-    fetchSheet();
-  </script>
-</body>
-</html>
