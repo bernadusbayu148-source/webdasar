@@ -2,59 +2,73 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Feeling Leaderboard — Feeling Family</title>
-
-  <!-- Font Inter -->
-  https://fonts.googleapis.com
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Leaderboard Member</title>
+  <link rel="icon" href="favicon.ico" type="imageonts.googleapis.com
   https://fonts.gstatic.com
   https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap
 
   <style>
-    :root{
-      --bg:#0f172a;           /* slate-900 */
-      --surface:#111827;      /* gray-900 */
-      --card:#0b1220;
-      --border:#1f2937;
-      --text:#e5e7eb;         /* gray-200 */
-      --muted:#9ca3af;        /* gray-400 */
-      --primary:#22c55e;      /* green-500 */
-      --primary-700:#15803d;
-      --accent:#38bdf8;       /* sky-400 */
+    :root {
+      --text: #e5e7eb;
+      --muted: #9ca3af;
+      --primary: #22c55e;
+      --accent: #38bdf8;
     }
-    *{box-sizing:border-box}
-    html,body{margin:0;padding:0;background:var(--bg);color:var(--text);font-family:'Inter',system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif}
-    a{color:var(--accent);text-decoration:none}
-    .header{
-      display:flex;align-items:center;justify-content:space-between;
-      padding:16px 24px;background:var(--surface);border-bottom:1px solid var(--border);
-      position:sticky;top:0;z-index:10;
+    * { box-sizing: border-box; }
+    body {
+      margin: 0; padding: 0;
+      background: var(--bg); color: var(--text);
+      font-family: 'Inter', sans-serif;
     }
-    .brand{display:flex;align-items:center;gap:12px;color:var(--text)}
-    .logo-oval{
-      width:44px;height:28px;border-radius:999px;display:flex;align-items:center;justify-content:center;
-      background:var(--accent);color:#06131e;font-weight:700;letter-spacing:.5px
+    header {
+      background: var(--surface);
+      padding: 16px 24px;
+      display: flex; justify-content: space-between; align-items: center;
+         .container { max-width: 1000px; margin: 0 auto; padding: 24px; }
+    .controls { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px; }
+    .controls button {
+      padding: 8px 12px; border-radius: 8px; border: 1px solid var(--border);
+      background: var(--card); color: var(--text); cursor: pointer;
     }
-    .brand small{display:block;color:var(--muted)}
-    .container{max-width:1100px;margin:0 auto;padding:24px}
-    .title-area{display:flex;flex-wrap:wrap;gap:12px;align-items:flex-end;margin:24px 0}
-    .title-area h1{margin:0;font-size:1.8rem}
-    .meta{color:var(--muted)}
+    .controls button:hover { background: var(--accent); color: #000; }
+    table {
+      width: 100%; border-collapse: collapse; background: var(--card);
+      border-radius: 8px; overflow: hidden;
+    }
+    th, td {
+      padding: 12px; border-bottom: 1px solid var(--border); text-align: left;
+    }
+    th { color: var(--muted); font-weight: 600; }
+    tr:hover td { background: #1f2937; }
+    .empty-row { text-align: center; color: var(--muted); }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Leaderboard Member</h1>
+    <small>Data diambil dari Google Sheets</small>
+  </header>
 
-    .controls{display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin-bottom:16px}
-    .tabs{display:flex;gap:8px;flex-wrap:wrap}
-    .tab{
-      padding:8px 12px;border-radius:10px;border:1px solid var(--border);
-      background:var(--card);color:var(--text);cursor:pointer
-    }
-    .tab.active{background:var(--accent);color:#06131e;border-color:transparent;font-weight:700}
-    .search{flex:1;min-width:220px;display:flex;gap:8px}
-    .search input{
-      flex:1;padding:10px 12px;border-radius:10px;border:1px solid var(--border);
-      background:#0f172a;color:var(--text)
-    }
-    .btn{
-      padding:10px 14px;border-radius:10px;border:1px solid var(--border);
-      background:var(--card);color:var(--text);cursor:pointer;font-weight:600
-    }
+  <main class="container">
+    <div class="controls">
+      <button>Top 10</button>
+      <button>Top 25</button>
+      <button>Top 50</button>
+      <button>Semua</button>
+      <button>Muat Ulang</button>
+    </div>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Peringkat</th>
+          <th>No Member</th>
+          <th>Nama</th>
+          <th>Point</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td colspan="4" class="empty-row">Memuat data…</td>
